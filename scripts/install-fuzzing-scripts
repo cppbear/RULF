@@ -6,9 +6,9 @@ TMP_DIR=${HOME}
 cd ${TMP_DIR}
 if [ ! -d "${TMP_DIR}/Fuzzing-Scripts" ]; then
    git clone https://github.com/Artisan-Lab/Fuzzing-Scripts
-   git checkout RuMono
 fi
 cd Fuzzing-Scripts
+git checkout RuMono
 cargo install --path afl_scripts
 cargo install --path find_literal
 cd ${TMP_DIR} && rm -rf Fuzzing-Scripts

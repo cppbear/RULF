@@ -2,6 +2,7 @@ ARG UBUNTU_VERSION
 FROM ubuntu:${UBUNTU_VERSION}
 
 ARG DEBIAN_FRONTEND=noninteractive
+RUN sed -i 's|http://archive.ubuntu.com/ubuntu/|http://mirror.nju.edu.cn/ubuntu/|g' /etc/apt/sources.list
 RUN apt-get --yes update \
   && apt-get install --no-install-recommends --yes \
   bison \
@@ -88,9 +89,9 @@ RUN echo "export PATH=\"${PATH}\"" >> ${USER_HOME}/.bashrc \
 SHELL ["/bin/bash", "-c"]
 RUN echo $'[source.crates-io] \n\ 
 registry = \"https://github.com/rust-lang/crates.io-index\" \n\ 
-replace-with = \'ustc\' \n\ 
-[source.ustc] \n\ 
-registry = \"git://mirrors.ustc.edu.cn/crates.io-index\"' > ${USER_HOME}/.cargo/config
+replace-with = \'nju\' \n\ 
+[source.nju] \n\ 
+registry = \"https://mirror.nju.edu.cn/git/crates.io-index.git\"' > ${USER_HOME}/.cargo/config
 
 ENV USER="${USERNAME}"
 

@@ -5,4 +5,4 @@ set -e
 #readonly DOCKER_USER="${USER:-root}"
 readonly DOCKER_USER="rumono"
 readonly PWD=`pwd`
-docker run -it --privileged=true -v ~/RULF:/home/${DOCKER_USER}/RuMono rumono:v0.1
+docker run -it --privileged=true -v ${PWD}:/home/${DOCKER_USER}/RuMono rumono:v0.1

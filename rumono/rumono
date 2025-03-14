@@ -59,6 +59,7 @@ def get_current_crate():
     return crate_name,crate_version
 
 def sub_cmd_gen(argument):
+    workspace = os.getcwd()
     if argument.dir:
         os.chdir(argument.dir)
     
@@ -83,7 +84,8 @@ def sub_cmd_gen(argument):
     match_str=find_str_from_matches(matches,crate_name)
     name,ver=get_info_from_rustdoc_string(match_str)
 
-    cmd = "fuzz-target-generator" + match_str 
+    cmd = f"cd {workspace}\n"
+    cmd += "fuzz-target-generator" + match_str 
     #+ " --document-private-items --document-hidden-items -Z unstable-options" # Experimental Argument
 
     gen_script_path=os.getcwd()+"/rumono-gen.sh"
