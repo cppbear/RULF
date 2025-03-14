@@ -62,8 +62,8 @@ def sub_cmd_gen(argument):
     workspace = os.getcwd()
     if argument.dir:
         os.chdir(argument.dir)
-    
-    print(f"Rumono working on {os.getcwd()}")
+    crate_dir = os.getcwd()
+    print(f"Rumono working on {crate_dir}")
     
     crate_name, crate_version = get_current_crate()
     print(f"crate: {crate_name}={crate_version}")
@@ -87,6 +87,8 @@ def sub_cmd_gen(argument):
     cmd = f"cd {workspace}\n"
     cmd += "fuzz-target-generator" + match_str 
     #+ " --document-private-items --document-hidden-items -Z unstable-options" # Experimental Argument
+    if workspace != crate_dir:
+        cmd += f"\nmv fuzz_target {crate_dir}/\n"
 
     gen_script_path=os.getcwd()+"/rumono-gen.sh"
     
