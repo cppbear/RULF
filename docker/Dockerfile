@@ -89,9 +89,9 @@ RUN echo "export PATH=\"${PATH}\"" >> ${USER_HOME}/.bashrc \
 SHELL ["/bin/bash", "-c"]
 RUN echo $'[source.crates-io] \n\ 
 registry = \"https://github.com/rust-lang/crates.io-index\" \n\ 
-replace-with = \'nju\' \n\ 
-[source.nju] \n\ 
-registry = \"https://mirror.nju.edu.cn/git/crates.io-index.git\"' > ${USER_HOME}/.cargo/config
+replace-with = \'tuna\' \n\ 
+[source.tuna] \n\
+registry = \"https://mirrors.tuna.tsinghua.edu.cn/git/crates.io-index.git"' > ${USER_HOME}/.cargo/config.toml
 
 ENV USER="${USERNAME}"
 
