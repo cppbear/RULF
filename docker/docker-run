@@ -5,4 +5,6 @@ set -e
 #readonly DOCKER_USER="${USER:-root}"
 readonly DOCKER_USER="rumono"
 readonly PWD=`pwd`
-docker run -it --cpus 5 -m 12g --memory-swap 132g --privileged=true -v ${PWD}:/home/${DOCKER_USER}/RuMono --name rumono rumono:v0.1
+docker run -it --cpus 5 -m 12g --memory-swap 132g --privileged=true \
+    -v ${PWD}:/home/${DOCKER_USER}/RuMono \
+    --name rumono rumono:v0.1
