@@ -5,10 +5,9 @@ set -e
 TMP_DIR=${HOME}
 cd ${TMP_DIR}
 if [ ! -d "${TMP_DIR}/Fuzzing-Scripts" ]; then
-   git clone https://github.com/cppbear/Fuzzing-Scripts.git
+   git clone --branch RuMono-patch --depth 1 https://github.com/cppbear/Fuzzing-Scripts.git
 fi
 cd Fuzzing-Scripts
-git checkout RuMono-patch
 cargo install --path afl_scripts
 cargo install --path find_literal
 cd ${TMP_DIR} && rm -rf Fuzzing-Scripts
