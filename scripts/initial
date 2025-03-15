@@ -1,0 +1,20 @@
+#! /usr/bin/env bash
+
+set -e
+
+SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
+
+PARENT_DIR=$(dirname "$SCRIPT_DIR")
+
+RUMONO_DIR="$PARENT_DIR/rumono"
+
+if [ -d "$RUMONO_DIR" ]; then
+    export PATH="$RUMONO_DIR:$PATH"
+    echo "Added $RUMONO_DIR to PATH"
+else
+    echo "Error: $RUMONO_DIR does not exist"
+    exit 1
+fi
+
+cargo install afl --version 0.13.5 --locked
+cargo +stable install cargo-llvm-cov --locked
