@@ -114,7 +114,8 @@ def sub_cmd_build(argument):
     run_process(f"afl_scripts -b {crate_name}", show=True)
 
 def sub_cmd_fuzz(argument):
-    run_process(f"afl_scripts -fuzz", show=True)
+    loop_count=argument.loop_count
+    run_process(f"afl_scripts -fuzz -l {loop_count}", show=True)
 
 
 # define parser
@@ -136,6 +137,7 @@ build_parser.set_defaults(func=sub_cmd_build)
 
 fuzz_parser = subparsers.add_parser("fuzz",help="build target from fuzz_driver")
 fuzz_parser.add_argument("--dir",   help="specify the library directory", type=str)
+fuzz_parser.add_argument("--loop-count",   help="specify the fuzz loop count", type=int,default=20)
 fuzz_parser.set_defaults(func=sub_cmd_fuzz)
 
 args = parser.parse_args()  # 处理输入的参数
