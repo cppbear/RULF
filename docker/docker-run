@@ -12,12 +12,7 @@ else
     readonly CONTAINER_NAME="rumono-$1"
 fi
 
-if [ "$1" == "--init" ]; then
-    docker run -it --privileged=true \
-        -v "${PWD}:/home/${DOCKER_USER}/RuMono" \
-        --name "rumono" rumono:v0.1
-else
-    docker run -it --cpus 5 -m 12g --memory-swap 132g --privileged=true \
-        -v "${PWD}:/home/${DOCKER_USER}/RuMono" \
-        --name "${CONTAINER_NAME}" rumono:v0.1
-fi
+docker run -it --privileged=true \
+    --cpus 16 \
+    -v "${PWD}:/home/${DOCKER_USER}/RuMono" \
+    --name "${CONTAINER_NAME}" rumono:v0.1

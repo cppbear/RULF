@@ -21,5 +21,5 @@ docker image build \
     --build-arg=USERNAME="$DOCKER_USER" \
     --build-arg=USER_UID="$DOCKER_UID" \
     --build-arg=USER_GID="$DOCKER_GID" \
-    --build-arg=UBUNTU_VERSION="20.04" \
+    --build-arg=UBUNTU_VERSION="24.04" \
     . 1>&2

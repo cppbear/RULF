@@ -2,16 +2,18 @@ ARG UBUNTU_VERSION
 FROM ubuntu:${UBUNTU_VERSION}
 
 ARG DEBIAN_FRONTEND=noninteractive
-RUN sed -i 's|http://archive.ubuntu.com/ubuntu/|http://mirror.nju.edu.cn/ubuntu/|g' /etc/apt/sources.list
-RUN apt-get --yes update \
-  && apt-get install --no-install-recommends --yes \
+RUN apt update && apt install ca-certificates -y
+RUN sed -i 's|http://archive.ubuntu.com/ubuntu/|https://mirror.nju.edu.cn/ubuntu/|g' /etc/apt/sources.list.d/ubuntu.sources
+RUN apt update \
+  && apt upgrade -y \
+  && apt install --no-install-recommends --yes \
   bison \
   build-essential \
-  clang-10 \
-  clang-format-10 \
-  clang-tools-10 \
+  clang \
+  clang-format \
+  clang-tools \
   gcc-multilib \
-  g++-7-multilib \
+  g++-multilib \
   cmake \
   curl \
   doxygen \
@@ -22,39 +24,42 @@ RUN apt-get --yes update \
   libcap-dev \
   libffi-dev \
   libgoogle-perftools-dev \
-  libncurses5-dev \
+  libncurses-dev \
   libsqlite3-dev \
   libssl-dev \
-  libtcmalloc-minimal4 \
-  lib32stdc++-7-dev \
+  libtcmalloc-minimal4t64 \
+  lib32stdc++-13-dev \
   libgmp-dev \
   libgmpxx4ldbl \
-  lld-10 \
-  llvm-10 \
+  lld \
+  llvm \
   ncurses-doc \
   ninja-build \
   perl \
   pkg-config \
-  python \
   python3 \
+  python3-colored \
   python3-minimal \
   python3-pip \
+  python3-setuptools \
+  python3-tabulate \
+  python3-termcolor \
+  python3-toml \
   subversion \
   sudo \
   unzip \
   wget \
+  zsh \
+  zsh-syntax-highlighting \
+  zsh-autosuggestions \
   # Cleanup
-  && apt-get clean \
+  && apt autoremove \
+  && apt clean \
   # Install Python packages
-  && pip3 install --no-cache-dir setuptools \
-  && pip3 install --no-cache-dir \
-    argparse \
-    colored \
-    lit \
-    tabulate \
-    termcolor \
-    toml \
-    wllvm
+  && pip3 install --no-cache-dir --break-system-packages \
+  argparse \
+  lit \
+  wllvm
 
 ARG USERNAME
 ARG USER_UID
@@ -67,33 +72,40 @@ ENV PATH="${FUZZ_TARGET_GENERATOR_DIR}/build/x86_64-unknown-linux-gnu/stage2/bin
 ENV PATH="${FUZZ_TARGET_GENERATOR_DIR}/build/x86_64-unknown-linux-gnu/stage2-tools-bin:${PATH}"
 
 RUN (groupadd --gid=${USER_GID} ${USERNAME} || true) \
-  && (useradd --shell=/bin/bash --uid=${USER_UID} --gid=${USER_GID} --create-home ${USERNAME} || true) \
+  && (useradd --shell=/usr/bin/zsh --uid=${USER_UID} --gid=${USER_GID} --create-home ${USERNAME} || true) \
   && echo "${USERNAME}  ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 #install rustup
 USER ${USERNAME}
 WORKDIR ${USER_HOME}
 
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
 RUN curl --location https://sh.rustup.rs > /tmp/rustup \
   && sh /tmp/rustup -y --default-toolchain=none \
   && rustup --version \
   && rm /tmp/rustup
 
+#create a .zshrc
+RUN echo "export PATH=\"${PATH}\"" >> ${USER_HOME}/.zshrc \
+  && echo "ulimit -c 0" >> ${USER_HOME}/.zshrc
 
+RUN sed -i 's/^ZSH_THEME=.*/ZSH_THEME="ys"/' ~/.zshrc
 
-#create a .bashrc
-RUN echo "export PATH=\"${PATH}\"" >> ${USER_HOME}/.bashrc \
-  && echo "ulimit -c0" >> ${USER_HOME}/.bashrc
+RUN echo 'source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh\n\
+  source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh\n' >> ${USER_HOME}/.zshrc
 
 # change default cargo config
-SHELL ["/bin/bash", "-c"]
-RUN echo $'[source.crates-io] \n\ 
-registry = \"https://github.com/rust-lang/crates.io-index\" \n\ 
-replace-with = \'tuna\' \n\ 
-[source.tuna] \n\
-registry = \"https://mirrors.tuna.tsinghua.edu.cn/git/crates.io-index.git"' > ${USER_HOME}/.cargo/config.toml
+SHELL ["/usr/bin/zsh", "-c"]
+RUN echo $'[source.crates-io]\n\
+  replace-with = \'tuna\'\n\
+  [source.tuna]\n\
+  registry = "sparse+https://mirrors.tuna.tsinghua.edu.cn/crates.io-index/"\n\
+  [registries.tuna]\n\
+  index = "sparse+https://mirrors.tuna.tsinghua.edu.cn/crates.io-index/"\n' > ${USER_HOME}/.cargo/config.toml
 
 ENV USER="${USERNAME}"
 
 RUN mkdir ${FUZZ_TARGET_GENERATOR_DIR}
 WORKDIR ${FUZZ_TARGET_GENERATOR_DIR}
+ENTRYPOINT [ "/usr/bin/zsh" ]
