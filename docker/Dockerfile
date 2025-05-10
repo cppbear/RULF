@@ -98,11 +98,9 @@ RUN echo 'source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh\n\
 # change default cargo config
 SHELL ["/usr/bin/zsh", "-c"]
 RUN echo $'[source.crates-io]\n\
-  replace-with = \'tuna\'\n\
-  [source.tuna]\n\
-  registry = "sparse+https://mirrors.tuna.tsinghua.edu.cn/crates.io-index/"\n\
-  [registries.tuna]\n\
-  index = "sparse+https://mirrors.tuna.tsinghua.edu.cn/crates.io-index/"\n' > ${USER_HOME}/.cargo/config.toml
+replace-with = \'tuna\'\n\
+[source.tuna]\n\
+registry = "https://mirrors.tuna.tsinghua.edu.cn/git/crates.io-index.git"\n' > ${USER_HOME}/.cargo/config.toml
 
 ENV USER="${USERNAME}"
 
