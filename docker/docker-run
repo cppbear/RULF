@@ -15,4 +15,4 @@ fi
 docker run -it --privileged=true \
     --cpus 16 \
     -v "${PWD}:/home/${DOCKER_USER}/RuMono" \
-    --name "${CONTAINER_NAME}" rumono:v0.1
+    --name "${CONTAINER_NAME}" rumono:1.66
