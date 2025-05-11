@@ -81,10 +81,10 @@ def sub_cmd_gen(argument):
     print(f"generate fuzz drivers for: {crate_name}")
 
     # clean project
-    run_process("cargo clean")
+    run_process("cargo +stage2 clean")
 
     # generate command
-    out, err = run_process("cargo doc -v")
+    out, err = run_process("cargo +stage2 doc -v")
     # print(out,err)
 
     matches = re.findall(r"Running `rustdoc(.+?)`", err, re.S)
@@ -93,7 +93,7 @@ def sub_cmd_gen(argument):
     name, ver = get_info_from_rustdoc_string(match_str)
 
     cmd = f"cd {workspace}\n"
-    cmd += "fuzz-target-generator" + match_str
+    cmd += "rustup run stage2 fuzz-target-generator" + match_str
     # + " --document-private-items --document-hidden-items -Z unstable-options" # Experimental Argument
     if workspace != crate_dir:
         cmd += f"\nmv fuzz_target {crate_dir}/\n"

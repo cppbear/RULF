@@ -68,8 +68,8 @@ ARG USER_HOME=/home/${USERNAME}
 ARG FUZZ_TARGET_GENERATOR_DIR=${USER_HOME}/RuMono
 
 ENV PATH="${USER_HOME}/.cargo/bin:${PATH}"
-ENV PATH="${FUZZ_TARGET_GENERATOR_DIR}/build/x86_64-unknown-linux-gnu/stage2/bin:${PATH}"
-ENV PATH="${FUZZ_TARGET_GENERATOR_DIR}/build/x86_64-unknown-linux-gnu/stage2-tools-bin:${PATH}"
+
+RUN userdel -r ubuntu
 
 RUN (groupadd --gid=${USER_GID} ${USERNAME} || true) \
   && (useradd --shell=/usr/bin/zsh --uid=${USER_UID} --gid=${USER_GID} --create-home ${USERNAME} || true) \

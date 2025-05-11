@@ -6,13 +6,10 @@ SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
 PARENT_DIR=$(dirname "$SCRIPT_DIR")
 RUMONO_DIR="$PARENT_DIR/rumono"
 
-# cargo install cargo-afl --version 0.15.15 --locked
+rustup install nightly-2024-07-21
+rustup component add --toolchain nightly-2024-07-21 llvm-tools-preview
 
-git clone --depth 1 https://github.com/cppbear/afl.rs.git $HOME/afl.rs
-cd $HOME/afl.rs
-git submodule update --init
-cargo install --path afl --locked
-cd $HOME && rm -rf afl.rs
+cargo install cargo-afl
 
 # Get host target
 host=$(rustc -vV | grep '^host:' | cut -d' ' -f2)

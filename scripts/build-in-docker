@@ -7,4 +7,5 @@ set -e
 USER_NAME="${USER:-root}"
 FUZZ_TARGET_GENERATOR_DIR=/home/${USER_NAME}/RuMono
 cd ${FUZZ_TARGET_GENERATOR_DIR} && python3 ./x.py build --stage 2 src/tools/cargo src/tools/rustfmt src/tools/clippy && python3 ./x.py build --stage 2
-rustup toolchain link stage2 ${FUZZ_TARGET_GENERATOR_DIR}/build/x86*/stage2 && rustup default stage2
+cp ${FUZZ_TARGET_GENERATOR_DIR}/build/x86*/stage2-tools-bin/* ${FUZZ_TARGET_GENERATOR_DIR}/build/x86*/stage2/bin/
+rustup toolchain link stage2 ${FUZZ_TARGET_GENERATOR_DIR}/build/x86*/stage2
