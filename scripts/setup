@@ -9,7 +9,7 @@ RUMONO_DIR="$PARENT_DIR/rumono"
 rustup install nightly-2024-07-21
 rustup component add --toolchain nightly-2024-07-21 llvm-tools-preview
 
-cargo install cargo-afl
+cargo install cargo-afl --version 0.15.15 --locked
 
 # Get host target
 host=$(rustc -vV | grep '^host:' | cut -d' ' -f2)
